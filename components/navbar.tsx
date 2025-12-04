@@ -29,7 +29,7 @@ const Navbar = ({ userInfo }: userInfoProps) => {
   }) => {
     return (
       <div
-        className={` w-full flex flex-row gap-2 text-sm items-center ${
+        className={` w-full flex flex-row gap-2 text-sm items-center hover:bg-neutral-950 ${
           navOpen ? "justify-start" : "justify-center"
         }`}
         onClick={onClick}
