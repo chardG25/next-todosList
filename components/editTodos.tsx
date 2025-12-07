@@ -5,6 +5,14 @@ import { RowDataPacket } from "mysql2";
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Input } from "@/components/ui/input";
 
 interface Todo extends RowDataPacket {
   id: number;
@@ -71,25 +79,26 @@ const EditTodos: React.FC<ButtonClose> = ({
             <X className="text-white" />
           </button>
         </span>
-        <span className="flex-1 flex items-start justify-center gap-2 pt-4">
-          <input
-            className="w-[500px] h-10 rounded-md border-2 text-sm p-2 bg-neutral-200 border-neutral-500"
-            placeholder="todo"
+        <span className="flex-1 flex items-start justify-center gap-1 pt-4">
+          <Input
             value={updatedTodo}
             onChange={(e) => setUpdatedTodo(e.target.value)}
+            className="w-[500px]"
           />
-          <select
-            value={updatedStatus}
-            onChange={(e) => setUpdatedStatus(e.target.value)}
-            className="w-24 h-10 rounded-md border-2 text-sm text-center  bg-neutral-200 border-neutral-500"
-          >
-            <option value="pending">Pending</option>
-            <option value="completed">Completed</option>
-          </select>
+
+          <Select value={updatedStatus} onValueChange={setUpdatedStatus}>
+            <SelectTrigger className="w-[150px] ">
+              <SelectValue placeholder="Select Filter" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="completed">Completed</SelectItem>
+            </SelectContent>
+          </Select>
 
           <button
             onClick={handleSave}
-            className="tracking-wider h-10 w-20  rounded-md border-2 font-bold focus:ring-0 focus:bg-blue-800 focus:text-white outline-0 border-blue-800 text-blue-500 hover:text-white hover:bg-blue-800 text-sm"
+            className="tracking-wider h-9 w-20  rounded-md border-2 font-bold focus:ring-0 focus:bg-blue-800 focus:text-white outline-0 border-blue-800 text-blue-500 hover:text-white hover:bg-blue-800 text-sm"
           >
             Save
           </button>

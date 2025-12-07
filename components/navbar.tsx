@@ -35,7 +35,7 @@ const Navbar = ({ userInfo }: userInfoProps) => {
       }`}
     >
       <div
-        className="absolute top-0 right-0 h-full w-0.5 cursor-e-resize z-50"
+        className="absolute top-0 right-0 h-full w-1 cursor-e-resize z-50"
         onClick={handleNavBar}
       />
 
