@@ -8,7 +8,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/sidebar";
+import AppSidebar from "@/components/appSideBar";
 
 export const metadata: Metadata = {
   title: "Todos",
@@ -25,18 +25,13 @@ export default async function DashboardLayout({
     <div className="flex flex-row w-screen h-screen">
       <SidebarProvider>
         <AppSidebar />
-        <div className="flex-1 flex flex-row relative">
+        <SidebarInset className="contain-inline-size" />
+        <div className="flex flex-col w-full">
           <SidebarTrigger className="absolute" />
           {children}
         </div>
+        <SidebarInset />
       </SidebarProvider>
     </div>
   );
-}
-
-{
-  /* <Navbar userInfo={userInfo} /> */
-}
-{
-  /* <div className="flex-1 flex flex-col">{children}</div> */
 }
