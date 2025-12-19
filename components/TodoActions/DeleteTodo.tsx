@@ -2,7 +2,7 @@
 
 import { X } from "lucide-react";
 import { RowDataPacket } from "mysql2";
-import React, { useState, Dispatch, SetStateAction } from "react";
+import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 
@@ -20,7 +20,11 @@ interface Props {
   onClose: () => void;
 }
 
-const DelTodos: React.FC<Props> = ({ onClose, deletedTodos, setTodos }) => {
+export const DeleteTodo: React.FC<Props> = ({
+  onClose,
+  deletedTodos,
+  setTodos,
+}) => {
   const handleDelete = () => {
     fetch("http://localhost:3000/api/todo", {
       method: "DELETE",
@@ -48,6 +52,20 @@ const DelTodos: React.FC<Props> = ({ onClose, deletedTodos, setTodos }) => {
       });
   };
 
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [onClose]);
+
   return createPortal(
     <div className="w-full h-full fixed bg-neutral-900/90 inset-0 z-11 flex items-center justify-center">
       <div className="bg-neutral-900 w-[600px] h-20 border-2 border-neutral-100 rounded-2xl flex flex-row p-1 items-center justify-center gap-2 shadow-[0px_0px_8px_#808080]">
@@ -71,5 +89,3 @@ const DelTodos: React.FC<Props> = ({ onClose, deletedTodos, setTodos }) => {
     document.body
   );
 };
-
-export default DelTodos;

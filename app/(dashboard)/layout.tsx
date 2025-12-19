@@ -20,16 +20,13 @@ export default async function DashboardLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const userInfo = await getUser();
   return (
     <div className="flex flex-row w-screen h-screen">
       <SidebarProvider>
         <AppSidebar />
+
         <SidebarInset className="contain-inline-size" />
-        <div className="flex flex-col w-full">
-          <SidebarTrigger className="absolute" />
-          {children}
-        </div>
+        <div className="flex flex-col w-full">{children}</div>
         <SidebarInset />
       </SidebarProvider>
     </div>

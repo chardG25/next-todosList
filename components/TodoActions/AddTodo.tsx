@@ -1,6 +1,6 @@
 import { db } from "@/SERVER/mysql";
 import { RowDataPacket } from "mysql2";
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { toast } from "react-toastify";
 
@@ -13,15 +13,15 @@ interface Todo extends RowDataPacket {
 }
 
 interface Props {
-  addTodo: string;
+  todoValue: string;
   setAddTodo: Dispatch<SetStateAction<string>>;
   setTodos: Dispatch<SetStateAction<Todo[]>>;
   onClose: () => void;
 }
-const AddTodos: React.FC<Props> = ({
+export const AddTodo: React.FC<Props> = ({
   setAddTodo,
   setTodos,
-  addTodo,
+  todoValue,
   onClose,
 }) => {
   const handleAddTodo = () => {
@@ -30,7 +30,7 @@ const AddTodos: React.FC<Props> = ({
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({ todo: addTodo }),
+      body: JSON.stringify({ todo: todoValue }),
     })
       .then((res) => res.json())
       .then((data) => {
@@ -51,6 +51,21 @@ const AddTodos: React.FC<Props> = ({
         );
       });
   };
+
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [onClose]);
+
   return createPortal(
     <div className="w-full h-full fixed bg-neutral-900/90 inset-0 z-11 flex items-center justify-center">
       <div className="bg-neutral-900 w-[600px] h-20 border-2 border-neutral-100 rounded-2xl flex flex-row p-1 items-center justify-center gap-2 shadow-[0px_0px_8px_#808080]">
@@ -78,5 +93,3 @@ const AddTodos: React.FC<Props> = ({
     document.body
   );
 };
-
-export default AddTodos;

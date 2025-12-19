@@ -28,7 +28,7 @@ interface ButtonClose {
   onClose: () => void;
 }
 
-const EditTodos: React.FC<ButtonClose> = ({
+export const UpdateTodo: React.FC<ButtonClose> = ({
   onClose,
   forUpdateTodo,
   setTodos,
@@ -71,6 +71,20 @@ const EditTodos: React.FC<ButtonClose> = ({
       });
   };
 
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === "Escape") {
+        onClose();
+      }
+    };
+
+    window.addEventListener("keydown", handleEsc);
+
+    return () => {
+      window.removeEventListener("keydown", handleEsc);
+    };
+  }, [onClose]);
+
   return createPortal(
     <div className="w-full h-full fixed bg-neutral-900/90 inset-0 z-11 flex items-center justify-center">
       <div className="bg-neutral-900 w-[800px] h-30 border-2 border-neutral-100 rounded-2xl flex flex-col p-1 shadow-[0px_0px_8px_#808080]">
@@ -108,5 +122,3 @@ const EditTodos: React.FC<ButtonClose> = ({
     document.body
   );
 };
-
-export default EditTodos;
