@@ -1,13 +1,13 @@
 "use client";
 import { LockKeyhole, User } from "lucide-react";
 import React, { useEffect, useState } from "react";
-import { PageRouter } from "@/SERVER/router";
+import { usePageRouter } from "@/SERVER/router";
 
-const UserSignup = () => {
+export const UserSignup = () => {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
 
-  const handlePageRouter = PageRouter();
+  const handlePageRouter = usePageRouter();
 
   const handleAddUser = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -82,5 +82,3 @@ const UserSignup = () => {
     </div>
   );
 };
-
-export default UserSignup;

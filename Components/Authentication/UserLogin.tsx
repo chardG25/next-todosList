@@ -2,14 +2,14 @@
 
 import { LockKeyhole, User } from "lucide-react";
 import { useState } from "react";
-import { PageRouter } from "@/SERVER/router";
+import { usePageRouter } from "@/SERVER/router";
 import { toast } from "react-toastify";
 
-const UserLogin = () => {
+export const UserLogin = () => {
   const [userName, setUserName] = useState("");
   const [userPassword, setUserPassword] = useState("");
 
-  const handlePageRouter = PageRouter();
+  const handlePageRouter = usePageRouter();
 
   const handleSignIn = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -87,5 +87,3 @@ const UserLogin = () => {
     </div>
   );
 };
-
-export default UserLogin;

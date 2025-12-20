@@ -2,19 +2,10 @@
 
 import { Circle, Pencil, Search, SearchX, Trash } from "lucide-react";
 import { RowDataPacket } from "mysql2";
-import { useEffect, useState } from "react";
-
+import { use, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { toLocaleCapitalize } from "@/SERVER/capitalize";
-
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+import { Input } from "@/Components/ui/input";
 import {
   Table,
   TableBody,
@@ -23,9 +14,9 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { FilterByCreatedAt, FilterByStatus } from "./FilterTypesTodos";
-import { AddTodo, DeleteTodo, UpdateTodo } from "./TodoActions";
+} from "@/Components/ui/table";
+import { FilterByCreatedAt, FilterByStatus } from "../FilterTypesTodos";
+import { AddTodo, DeleteTodo, UpdateTodo } from "../TodoActions";
 
 interface Todo extends RowDataPacket {
   id: number;
@@ -43,9 +34,12 @@ const Todos = () => {
   const [showAddTodos, setShowAddTodos] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [deletedTodos, setDeletedTodos] = useState<Todo | null>(null);
-  const [selectFilterType, setSelectFilterType] = useState("");
+  const [selectedFilterStatus, setSelectedFilterStatus] =
+    useState<string>("ALL");
+  const [selectedFilterCreatedAt, setSelectedFilterCreatedAt] =
+    useState<string>("");
+  const [selectedFilterTodos, setSelectedFilterTodos] = useState<string>("");
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
-  const [showStatusFilter, setShowStatusFilter] = useState(false);
 
   const fetchTodos = () => {
     fetch("http://localhost:3000/api/todo")
@@ -60,38 +54,52 @@ const Todos = () => {
   }, []);
 
   useEffect(() => {
-    if (!selectFilterType) {
+    if (
+      !selectedFilterTodos &&
+      (!selectedFilterStatus || selectedFilterStatus === "ALL")
+    ) {
       setFilteredTodos(todos);
       return;
     }
-
-    const value = todoValue.toLowerCase();
+    const value = selectedFilterTodos.toLowerCase();
 
     const filteredTodo = todos.filter((todo) => {
-      if (selectFilterType === "TODOS") {
-        setShowStatusFilter(true);
-        return todo.todolist.toLowerCase().includes(value);
-      }
+      const matchesTodo = todo.todolist.toLowerCase().includes(value);
+      const matchesStatus =
+        !selectedFilterStatus || selectedFilterStatus === "ALL"
+          ? true
+          : todo.status.toLowerCase() === selectedFilterStatus.toLowerCase();
 
-      if (selectFilterType === "STATUS") {
-        setShowStatusFilter(true);
-        return todo.status.toLowerCase().includes(value);
-      }
+      return matchesTodo && matchesStatus;
     });
 
     setFilteredTodos(filteredTodo);
-  }, [selectFilterType, todoValue, todos]);
+  }, [selectedFilterStatus, selectedFilterTodos, todos]);
+  // useEffect(() => {
+  //   if (!selectFilterType) {
+  //     setFilteredTodos(todos);
+  //     return;
+  //   }
 
-  const clearFilter = () => {
-    setSelectFilterType("");
-    setTodoValue("");
-    setShowStatusFilter(false);
-  };
+  //   const value = todoValue.toLowerCase();
+
+  //   const filteredTodo = todos.filter((todo) => {
+  //     if (selectFilterType === "TODOS") {
+  //       return todo.todolist.toLowerCase().includes(value);
+  //     }
+
+  //     if (selectFilterType === "STATUS") {
+  //       return todo.status.toLowerCase().includes(value);
+  //     }
+  //   });
+
+  //   setFilteredTodos(filteredTodo);
+  // }, [selectFilterType, todoValue, todos]);
 
   return (
     <div className="h-full w-full bg-neutral-900/80 text-white flex flex-col ">
-      <div className=" h-24 flex flex-row items-center  gap-2">
-        <div className="gap-2 flex flex-1 px-2">
+      <div className=" h-24 flex flex-row items-center gap-2">
+        <div className="gap-2 flex flex-1 pl-10">
           <Input
             className="w-[500px] "
             placeholder="Add your todo here"
@@ -104,7 +112,7 @@ const Todos = () => {
               if (!todoValue) {
                 toast.error(
                   <div className="text-white flex w-[250px] h-[50px] items-center">
-                    Add your next task
+                    Todo should not be blank
                   </div>
                 );
                 return;
@@ -117,36 +125,20 @@ const Todos = () => {
           </button>
         </div>
 
-        <div className=" flex-1 flex-row flex gap-2">
-          <Input className="w-[300px] " placeholder="Search your todo here" />
+        <div className=" flex-1 flex-row flex gap-2 justify-end pr-10">
+          <Input
+            className="w-[300px] "
+            placeholder="Search your todo here"
+            value={selectedFilterTodos}
+            onChange={(e) => setSelectedFilterTodos(e.target.value)}
+          />
 
-          <FilterByStatus />
+          <FilterByStatus
+            value={selectedFilterStatus}
+            onChange={setSelectedFilterStatus}
+          />
           <FilterByCreatedAt />
-
-          {/* <Select
-            value={selectFilterType}
-            onValueChange={(e) => setSelectFilterType(e)}
-          >
-            <SelectTrigger className="w-[150px] ">
-              <SelectValue placeholder="Select Filter" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="TODOS">TODOS</SelectItem>
-              <SelectItem value="STATUS">STATUS</SelectItem>
-              <SelectItem value="CREATED_AT">CREATED_AT</SelectItem>
-            </SelectContent>
-          </Select> */}
         </div>
-
-        {selectFilterType && (
-          <button
-            title="Clear Filter"
-            onClick={clearFilter}
-            className="h-9 w-12 flex items-center justify-start "
-          >
-            <SearchX className="text-neutral-400 h-6 w-6 hover:h-8 hover:w-8" />
-          </button>
-        )}
       </div>
 
       <Table>

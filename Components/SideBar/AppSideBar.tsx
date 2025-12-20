@@ -14,7 +14,7 @@ import {
   SidebarMenuSubButton,
   SidebarMenuSubItem,
   SidebarRail,
-} from "@/components/ui/sidebar";
+} from "@/Components/ui/sidebar";
 import {
   ChevronRight,
   GalleryVerticalEnd,
@@ -29,12 +29,12 @@ import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "./ui/collapsible";
+} from "../ui/collapsible";
 import Link from "next/link";
-import { PageRouter } from "@/SERVER/router";
+import { usePageRouter } from "@/SERVER/router";
 
 function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-  const handlePageRouter = PageRouter();
+  const handlePageRouter = usePageRouter();
   const handleLogOut = () => {
     fetch("/api/auth/logout", {
       method: "POST",

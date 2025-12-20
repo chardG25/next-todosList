@@ -1,4 +1,4 @@
-import Navbar from "@/components/navbar";
+import Navbar from "@/Components/Others/navbar";
 import { getUser } from "@/SERVER/getUser";
 import { Metadata } from "next/types";
 import React from "react";
@@ -7,9 +7,8 @@ import {
   SidebarInset,
   SidebarProvider,
   SidebarTrigger,
-} from "@/components/ui/sidebar";
-import AppSidebar from "@/components/appSideBar";
-
+} from "@/Components/ui/sidebar";
+import AppSidebar from "@/Components/SideBar/AppSideBar";
 export const metadata: Metadata = {
   title: "Todos",
   description: "Create Todos",

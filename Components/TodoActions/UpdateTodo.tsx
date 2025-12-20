@@ -11,8 +11,8 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@/components/ui/select";
-import { Input } from "@/components/ui/input";
+} from "@/Components/ui/select";
+import { Input } from "@/Components/ui/input";
 
 interface Todo extends RowDataPacket {
   id: number;

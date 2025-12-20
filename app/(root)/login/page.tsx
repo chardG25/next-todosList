@@ -1,4 +1,4 @@
-import UserLogin from "@/components/login";
+import { UserLogin } from "@/Components/Authentication";
 
 const LoginRoute = () => {
   return (

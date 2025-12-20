@@ -1,4 +1,4 @@
-import Todos from "@/components/todos";
+import Todos from "@/Components/Todos/Todos";
 import { db } from "@/SERVER/mysql";
 
 const HomePageTodos = async () => {
