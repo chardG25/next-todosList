@@ -1,44 +1,70 @@
 "use client";
 
 import * as React from "react";
-import { ChevronDownIcon } from "lucide-react";
+import { ChevronDownIcon, X } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import { Button } from "../ui/button";
 import { Calendar } from "@/components/ui/calendar";
 import { DateRange } from "react-day-picker";
 
-export const FilterByCreatedAt = () => {
+interface FilterByCreatedAtProps {
+  value?: DateRange;
+  onChange: (range?: DateRange) => void;
+}
+
+export const FilterByCreatedAt = ({
+  value,
+  onChange,
+}: FilterByCreatedAtProps) => {
   const [open, setOpen] = React.useState(false);
-  const [date, setDate] = React.useState<Date | undefined>(undefined);
-  const [dateRange, setDateRange] = React.useState<DateRange | undefined>({
-    from: new Date(2025, 5, 12),
-    to: new Date(2025, 6, 15),
-  });
+
+  const label =
+    value?.from && value?.to
+      ? `${value.from.toLocaleDateString()} - ${value.to.toLocaleDateString()}`
+      : "SELECT DATE";
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex flex-col gap-3 relative">
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <Button
             variant="outline"
             id="date"
-            className="w-48 justify-between font-normal"
+            className="w-[140px] justify-between font-normal "
+            title={
+              value?.from && value?.to
+                ? `${value.from.toLocaleDateString()} - ${value.to.toLocaleDateString()}`
+                : undefined
+            }
           >
-            {date ? date.toLocaleDateString() : "Select date"}
+            <span className="truncate">{label}</span>
+
             <ChevronDownIcon />
           </Button>
         </PopoverTrigger>
-        <PopoverContent className="w-auto overflow-hidden p-0 " align="start">
+        <PopoverContent className="w-auto overflow-hidden p-0 " align="end">
           <Calendar
             mode="range"
-            defaultMonth={dateRange?.from}
-            selected={dateRange}
-            onSelect={setDateRange}
+            selected={value}
+            onSelect={onChange}
             numberOfMonths={2}
             className="rounded-lg border shadow-sm"
           />
         </PopoverContent>
       </Popover>
+      {value?.from && (
+        <span
+          className="h-5 w-5 border-neutral-200 border bg-neutral-600 flex items-center justify-center shrink-0 cursor-pointer opacity-60 
+             hover:opacity-100 hover:shadow-[0px_0px_5px_#808080] rounded-lg absolute right-[-2] top-[-8]"
+          onClick={(e) => {
+            e.stopPropagation();
+            onChange(undefined);
+            setOpen(false);
+          }}
+        >
+          <X className="size-4 text-white" />
+        </span>
+      )}
     </div>
   );
 };

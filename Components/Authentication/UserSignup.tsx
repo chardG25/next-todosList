@@ -35,7 +35,7 @@ export const UserSignup = () => {
   };
 
   return (
-    <div className="bg-black  h-96 w-[450px] justify-center items-center flex flex-col rounded-4xl pt-2 font-mono border-4 border-white ">
+    <div className="bg-neutral-900  h-96 w-[450px] justify-center items-center flex flex-col rounded-4xl pt-2 font-mono border-4 border-white ">
       <p className="h-16 w-[380px] flex items-center justify-start text-2xl font-bold  text-white tracking-wider ">
         SIGN UP
       </p>
@@ -48,7 +48,7 @@ export const UserSignup = () => {
           User Name
         </label>
         <input
-          className="h-10 w-[380px]  rounded-md text-sm focus:ring-0 hover:shadow-[0px_0px_10px_#fff] outline-0 p-2 text-gray-500 bg-white"
+          className="h-10 w-[380px]  rounded-md text-sm focus:ring-0 hover:shadow-[0px_0px_10px_#fff] outline-0 p-2 text-neutral-900 bg-white font-medium"
           type="input"
           placeholder="Enter your User Name"
           value={userName}
@@ -59,7 +59,7 @@ export const UserSignup = () => {
           Password
         </label>
         <input
-          className="h-10 w-[380px]  rounded-md text-sm focus:ring-0 hover:shadow-[0px_0px_10px_#fff] outline-0 p-2  text-gray-500 bg-white"
+          className="h-10 w-[380px]  rounded-md text-sm focus:ring-0 hover:shadow-[0px_0px_10px_#fff] outline-0 p-2  text-neutral-900 bg-white font-medium"
           type="password"
           placeholder="Enter your password"
           value={userPassword}

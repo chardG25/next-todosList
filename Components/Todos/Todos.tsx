@@ -17,6 +17,7 @@ import {
 } from "@/Components/ui/table";
 import { FilterByCreatedAt, FilterByStatus } from "../FilterTypesTodos";
 import { AddTodo, DeleteTodo, UpdateTodo } from "../TodoActions";
+import { DateRange } from "react-day-picker";
 
 interface Todo extends RowDataPacket {
   id: number;
@@ -36,8 +37,9 @@ const Todos = () => {
   const [deletedTodos, setDeletedTodos] = useState<Todo | null>(null);
   const [selectedFilterStatus, setSelectedFilterStatus] =
     useState<string>("ALL");
-  const [selectedFilterCreatedAt, setSelectedFilterCreatedAt] =
-    useState<string>("");
+  const [selectedFilterCreatedAt, setSelectedFilterCreatedAt] = useState<
+    DateRange | undefined
+  >();
   const [selectedFilterTodos, setSelectedFilterTodos] = useState<string>("");
   const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
 
@@ -54,47 +56,44 @@ const Todos = () => {
   }, []);
 
   useEffect(() => {
-    if (
-      !selectedFilterTodos &&
-      (!selectedFilterStatus || selectedFilterStatus === "ALL")
-    ) {
-      setFilteredTodos(todos);
-      return;
-    }
     const value = selectedFilterTodos.toLowerCase();
 
     const filteredTodo = todos.filter((todo) => {
       const matchesTodo = todo.todolist.toLowerCase().includes(value);
+
       const matchesStatus =
         !selectedFilterStatus || selectedFilterStatus === "ALL"
           ? true
           : todo.status.toLowerCase() === selectedFilterStatus.toLowerCase();
 
-      return matchesTodo && matchesStatus;
+      const matchesDate = (() => {
+        if (!selectedFilterCreatedAt?.from) return true;
+
+        const todoDate = new Date(todo.created_at);
+
+        const from = new Date(selectedFilterCreatedAt.from);
+        from.setHours(0, 0, 0, 0);
+
+        if (!selectedFilterCreatedAt.to) {
+          return todoDate >= from;
+        }
+
+        const to = new Date(selectedFilterCreatedAt.to);
+        to.setHours(23, 59, 59, 999);
+
+        return todoDate >= from && todoDate <= to;
+      })();
+
+      return matchesTodo && matchesStatus && matchesDate;
     });
 
     setFilteredTodos(filteredTodo);
-  }, [selectedFilterStatus, selectedFilterTodos, todos]);
-  // useEffect(() => {
-  //   if (!selectFilterType) {
-  //     setFilteredTodos(todos);
-  //     return;
-  //   }
-
-  //   const value = todoValue.toLowerCase();
-
-  //   const filteredTodo = todos.filter((todo) => {
-  //     if (selectFilterType === "TODOS") {
-  //       return todo.todolist.toLowerCase().includes(value);
-  //     }
-
-  //     if (selectFilterType === "STATUS") {
-  //       return todo.status.toLowerCase().includes(value);
-  //     }
-  //   });
-
-  //   setFilteredTodos(filteredTodo);
-  // }, [selectFilterType, todoValue, todos]);
+  }, [
+    selectedFilterTodos,
+    selectedFilterStatus,
+    selectedFilterCreatedAt,
+    todos,
+  ]);
 
   return (
     <div className="h-full w-full bg-neutral-900/80 text-white flex flex-col ">
@@ -137,7 +136,10 @@ const Todos = () => {
             value={selectedFilterStatus}
             onChange={setSelectedFilterStatus}
           />
-          <FilterByCreatedAt />
+          <FilterByCreatedAt
+            value={selectedFilterCreatedAt}
+            onChange={setSelectedFilterCreatedAt}
+          />
         </div>
       </div>
 
