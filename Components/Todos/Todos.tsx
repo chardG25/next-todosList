@@ -18,6 +18,7 @@ import {
 import { FilterByCreatedAt, FilterByStatus } from "../FilterTypesTodos";
 import { AddTodo, DeleteTodo, UpdateTodo } from "../TodoActions";
 import { DateRange } from "react-day-picker";
+import { useSearchParams } from "next/navigation";
 
 interface Todo extends RowDataPacket {
   id: number;
@@ -25,9 +26,16 @@ interface Todo extends RowDataPacket {
   status: string;
   user_id: number;
   created_at: string;
+  updated_at: string;
 }
 
 const Todos = () => {
+  const searchParams = useSearchParams();
+  const status = searchParams.get("status");
+
+  const [selectedFilterStatus, setSelectedFilterStatus] = useState<string>(
+    status ?? "ALL",
+  );
   const [todoValue, setTodoValue] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [showEditTodos, setShowEditTodos] = useState(false);
@@ -35,8 +43,7 @@ const Todos = () => {
   const [showAddTodos, setShowAddTodos] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [deletedTodos, setDeletedTodos] = useState<Todo | null>(null);
-  const [selectedFilterStatus, setSelectedFilterStatus] =
-    useState<string>("ALL");
+
   const [selectedFilterCreatedAt, setSelectedFilterCreatedAt] = useState<
     DateRange | undefined
   >();
@@ -112,7 +119,7 @@ const Todos = () => {
                 toast.error(
                   <div className="text-white flex w-[250px] h-[50px] items-center">
                     Todo should not be blank
-                  </div>
+                  </div>,
                 );
                 return;
               }
@@ -151,6 +158,7 @@ const Todos = () => {
             <TableHead className="text-center">TODOS</TableHead>
             <TableHead className="text-center">STATUS</TableHead>
             <TableHead className="text-center">CREATED_AT</TableHead>
+            <TableHead className="text-center">UPDATED_AT</TableHead>
             <TableHead className="text-center">ACTION</TableHead>
           </TableRow>
         </TableHeader>
@@ -174,7 +182,7 @@ const Todos = () => {
                 </span>
               </TableCell>
               <TableCell className="text-center">
-                {new Date(t.created_at)
+                {new Date(t.created_at.replace(" ", "T"))
                   .toLocaleString("en-US", {
                     year: "numeric",
                     month: "2-digit",
@@ -186,6 +194,22 @@ const Todos = () => {
                   })
                   .replace(",", "")}
               </TableCell>
+              <TableCell className="text-center">
+                {t.updated_at
+                  ? new Date(t.updated_at.replace(" ", "T"))
+                      .toLocaleString("en-US", {
+                        year: "numeric",
+                        month: "2-digit",
+                        day: "2-digit",
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        hour12: true,
+                        timeZone: "Asia/Manila",
+                      })
+                      .replace(",", "")
+                  : ""}
+              </TableCell>
+
               <TableCell className="text-center">
                 <span className="flex items-center justify-center gap-5">
                   <Pencil

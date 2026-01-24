@@ -1,6 +1,5 @@
 import { db } from "@/SERVER/mysql";
 import { usersProps } from "@/SERVER/userProps";
-import { error } from "console";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
 import { cookies } from "next/headers";
 
@@ -34,12 +33,12 @@ export async function POST(request: Request) {
 
   const [insertedTodo] = await db.execute<ResultSetHeader>(
     "INSERT INTO todostable (todolist, user_id) VALUES (?, ?)",
-    [todo, user_id_num]
+    [todo, user_id_num],
   );
 
   const [newTodo] = await db.query<Todo[]>(
     "SELECT * FROM todostable WHERE user_id = ? AND  id = ?",
-    [user_id_num, insertedTodo.insertId]
+    [user_id_num, insertedTodo.insertId],
   );
 
   return new Response(JSON.stringify({ data: newTodo[0] }), { status: 200 });
@@ -60,7 +59,7 @@ export async function GET(request: Request) {
 
   const [todos] = await db.query<usersProps[]>(
     "SELECT * FROM todostable WHERE user_id = ?",
-    [user_id_num]
+    [user_id_num],
   );
 
   return new Response(JSON.stringify({ data: todos }), { status: 200 });
@@ -76,13 +75,30 @@ export async function PATCH(request: Request) {
     });
   }
 
-  const query =
-    "UPDATE todostable SET todolist = ?, status = ? WHERE id = ? and user_id = ?";
-  await db.execute(query, [todolist, status, id, user_id]);
+  let query = "";
+  let params: any[] = [];
+
+  if (status === "completed") {
+    query = `
+      UPDATE todostable
+      SET todolist = ?, status = ?, updated_at = CURRENT_TIMESTAMP
+      WHERE id = ? AND user_id = ?
+    `;
+    params = [todolist, status, id, user_id];
+  } else {
+    query = `
+      UPDATE todostable
+      SET todolist = ?, status = ?, updated_at = created_at
+      WHERE id = ? AND user_id = ?
+    `;
+    params = [todolist, status, id, user_id];
+  }
+
+  await db.execute(query, params);
 
   const [rows] = await db.query<Todo[]>(
-    "SELECT * FROM todostable WHERE id = ? and user_id = ?",
-    [id, user_id]
+    "SELECT * FROM todostable WHERE id = ? AND user_id = ?",
+    [id, user_id],
   );
 
   return new Response(
@@ -90,7 +106,7 @@ export async function PATCH(request: Request) {
       message: "Todo successfully updated",
       data: rows[0],
     }),
-    { status: 200 }
+    { status: 200 },
   );
 }
 
@@ -102,6 +118,6 @@ export async function DELETE(request: Request) {
 
   return new Response(
     JSON.stringify({ message: "Todo deleted successfully" }),
-    { status: 200 }
+    { status: 200 },
   );
 }

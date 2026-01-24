@@ -12,6 +12,7 @@ interface Todo extends RowDataPacket {
   status: string;
   user_id: number;
   created_at: string;
+  updated_at: string;
 }
 
 interface Props {
@@ -47,7 +48,7 @@ export const DeleteTodo: React.FC<Props> = ({
         toast.success(
           <div className="text-white flex w-[250px] h-[50px] items-center">
             Todo deleted successfully!
-          </div>
+          </div>,
         );
       });
   };
@@ -86,6 +87,6 @@ export const DeleteTodo: React.FC<Props> = ({
         </button>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

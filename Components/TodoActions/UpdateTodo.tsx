@@ -20,6 +20,7 @@ interface Todo extends RowDataPacket {
   status: string;
   user_id: number;
   created_at: string;
+  updated_at: string;
 }
 
 interface ButtonClose {
@@ -58,13 +59,13 @@ export const UpdateTodo: React.FC<ButtonClose> = ({
         if (data) {
           setTodos((prev) =>
             prev.map((t) =>
-              t.id === forUpdateTodo.id ? { ...t, ...data.data } : t
-            )
+              t.id === forUpdateTodo.id ? { ...t, ...data.data } : t,
+            ),
           );
           toast.success(
             <div className="text-white flex w-[250px] h-[50px] items-center">
               Todo updated successfully!
-            </div>
+            </div>,
           );
           onClose();
         }
@@ -119,6 +120,6 @@ export const UpdateTodo: React.FC<ButtonClose> = ({
         </span>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };

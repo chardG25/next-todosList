@@ -10,6 +10,7 @@ interface Todo extends RowDataPacket {
   status: string;
   user_id: number;
   created_at: string;
+  updated_at: string;
 }
 
 interface Props {
@@ -38,7 +39,7 @@ export const AddTodo: React.FC<Props> = ({
           toast.error(
             <div className="text-white flex w-[250px] h-[50px] items-center">
               {data.error}
-            </div>
+            </div>,
           );
           return;
         }
@@ -47,7 +48,7 @@ export const AddTodo: React.FC<Props> = ({
         toast.success(
           <div className="text-white flex w-[250px] h-[50px] items-center">
             Todo added successfully!
-          </div>
+          </div>,
         );
       });
   };
@@ -90,6 +91,6 @@ export const AddTodo: React.FC<Props> = ({
         </button>
       </div>
     </div>,
-    document.body
+    document.body,
   );
 };
