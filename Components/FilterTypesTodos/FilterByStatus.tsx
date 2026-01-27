@@ -8,6 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "../ui/select";
+import { usePageRouter } from "@/SERVER/router";
 
 interface FilterByStatusProps {
   value: string;
@@ -15,6 +16,12 @@ interface FilterByStatusProps {
 }
 
 export const FilterByStatus = ({ onChange, value }: FilterByStatusProps) => {
+  const handlePageRouter = usePageRouter();
+
+  const handleRoute = (value: string) => {
+    handlePageRouter(`home/todos?status=${value}`);
+  };
+
   return (
     <div className="relative">
       <Select value={value} onValueChange={onChange}>

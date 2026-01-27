@@ -19,6 +19,7 @@ import { FilterByCreatedAt, FilterByStatus } from "../FilterTypesTodos";
 import { AddTodo, DeleteTodo, UpdateTodo } from "../TodoActions";
 import { DateRange } from "react-day-picker";
 import { useSearchParams } from "next/navigation";
+import { usePageRouter } from "@/SERVER/router";
 
 interface Todo extends RowDataPacket {
   id: number;
@@ -33,9 +34,20 @@ const Todos = () => {
   const searchParams = useSearchParams();
   const status = searchParams.get("status");
 
-  const [selectedFilterStatus, setSelectedFilterStatus] = useState<string>(
-    status ?? "ALL",
-  );
+  // const [selectedFilterStatus, setSelectedFilterStatus] = useState<string>(
+  //   status ?? "ALL",
+  // );
+
+  const handlePageRouter = usePageRouter();
+
+  const selectedFilterStatus = searchParams.get("status") ?? "ALL";
+
+  const handleStatusChange = (value: string) => {
+    handlePageRouter(
+      value === "ALL" ? "home/todos" : `home/todos?status=${value}`,
+    );
+  };
+
   const [todoValue, setTodoValue] = useState("");
   const [todos, setTodos] = useState<Todo[]>([]);
   const [showEditTodos, setShowEditTodos] = useState(false);
@@ -141,7 +153,7 @@ const Todos = () => {
 
           <FilterByStatus
             value={selectedFilterStatus}
-            onChange={setSelectedFilterStatus}
+            onChange={handleStatusChange}
           />
           <FilterByCreatedAt
             value={selectedFilterCreatedAt}

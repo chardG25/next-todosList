@@ -18,7 +18,9 @@ export const ChartPreview = ({ chartData }: ChartPreviewProps) => {
   const handlePageRouter = usePageRouter();
 
   const handleRoute = (value: string) => {
-    handlePageRouter(`home/todos?status=${value}`);
+    handlePageRouter(
+      value === "ALL" ? "home/todos" : `home/todos?status=${value}`,
+    );
   };
 
   return (
