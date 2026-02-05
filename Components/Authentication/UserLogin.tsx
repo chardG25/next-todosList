@@ -3,7 +3,7 @@
 import { LockKeyhole, User } from "lucide-react";
 import { useState } from "react";
 import { usePageRouter } from "@/SERVER/router";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 export const UserLogin = () => {
   const [userName, setUserName] = useState("");
@@ -21,20 +21,36 @@ export const UserLogin = () => {
       .then((res) => res.json().then((data) => ({ res, data })))
       .then(({ res, data }) => {
         if (!res.ok) {
-          toast.error(
-            <div className="text-red-400 flex w-[150px] h-[50px] items-center">
-              {data.error}
-            </div>
-          );
+          toast.error(data.error, {
+            position: "top-right",
+            style: {
+              width: "280px",
+              height: "50px",
+              fontSize: "15px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "red",
+              border: "2px solid white",
+            },
+          });
           setUserName("");
           setUserPassword("");
           return;
         }
-        toast.success(
-          <div className="text-green-200 flex w-[150px] h-[50px] items-center">
-            {`Welcome! ${data.user.username}`}
-          </div>
-        );
+        toast.success(<div>{`Welcome! ${data.user.username}`}</div>, {
+          position: "top-right",
+          style: {
+            width: "280px",
+            height: "50px",
+            fontSize: "15px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "green",
+            border: "2px solid white",
+          },
+        });
         console.log(data.user.username);
         setUserName("");
         setUserPassword("");

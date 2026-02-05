@@ -1,6 +1,7 @@
 import { db } from "@/SERVER/mysql";
 import { usersProps } from "@/SERVER/userProps";
 import { ResultSetHeader, RowDataPacket } from "mysql2";
+import { responseCookiesToRequestCookies } from "next/dist/server/web/spec-extension/adapters/request-cookies";
 import { cookies } from "next/headers";
 
 interface Todo extends RowDataPacket {
@@ -16,17 +17,12 @@ export async function POST(request: Request) {
   const cookieStore = await cookies();
 
   const userCookie = cookieStore.get("userId");
-
   if (!userCookie || !userCookie.value) {
-    return new Response(JSON.stringify({ error: "User not authenticated" }), {
-      status: 401,
-    });
+    return Response.json({ error: "User not authenticated" }, { status: 404 });
   }
 
   if (!todo) {
-    return new Response(JSON.stringify({ error: "Please enter Todo" }), {
-      status: 400,
-    });
+    return Response.json({ error: "User not authenticated" }, { status: 400 });
   }
 
   const user_id_num = parseInt(userCookie.value, 10);
@@ -41,7 +37,7 @@ export async function POST(request: Request) {
     [user_id_num, insertedTodo.insertId],
   );
 
-  return new Response(JSON.stringify({ data: newTodo[0] }), { status: 200 });
+  return Response.json({ data: newTodo[0] }, { status: 200 });
 }
 
 export async function GET(request: Request) {

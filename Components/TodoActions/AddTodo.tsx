@@ -2,7 +2,7 @@ import { db } from "@/SERVER/mysql";
 import { RowDataPacket } from "mysql2";
 import { Dispatch, SetStateAction, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface Todo extends RowDataPacket {
   id: number;
@@ -36,20 +36,37 @@ export const AddTodo: React.FC<Props> = ({
       .then((res) => res.json())
       .then((data) => {
         if (data.error) {
-          toast.error(
-            <div className="text-white flex w-[250px] h-[50px] items-center">
-              {data.error}
-            </div>,
-          );
+          toast.error(data.error, {
+            position: "bottom-right",
+            style: {
+              width: "280px",
+              height: "50px",
+              fontSize: "15px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "red",
+              border: "2px solid white",
+            },
+          });
           return;
         }
+
         setTodos((prev) => [...prev, data.data]);
         setAddTodo("");
-        toast.success(
-          <div className="text-white flex w-[250px] h-[50px] items-center">
-            Todo added successfully!
-          </div>,
-        );
+        toast.success("Todo added successfully!", {
+          position: "bottom-right",
+          style: {
+            width: "280px",
+            height: "50px",
+            fontSize: "15px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "green",
+            border: "2px solid white",
+          },
+        });
       });
   };
 

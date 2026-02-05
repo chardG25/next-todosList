@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { RowDataPacket } from "mysql2";
 import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 import { createPortal } from "react-dom";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import {
   Select,
   SelectContent,
@@ -62,11 +62,21 @@ export const UpdateTodo: React.FC<ButtonClose> = ({
               t.id === forUpdateTodo.id ? { ...t, ...data.data } : t,
             ),
           );
-          toast.success(
-            <div className="text-white flex w-[250px] h-[50px] items-center">
-              Todo updated successfully!
-            </div>,
-          );
+
+          toast.success("Todo updated successfully", {
+            position: "bottom-right",
+            style: {
+              width: "280px",
+              height: "50px",
+              fontSize: "15px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              color: "green",
+              border: "2px solid white",
+            },
+          });
+
           onClose();
         }
       });

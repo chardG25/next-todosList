@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { ToastContainer, Bounce } from "react-toastify";
+import { Toaster } from "@/components/ui/sonner";
 
 export const metadata: Metadata = {
   title: "Todos",
@@ -17,7 +18,8 @@ export default async function RootLayout({
       <body>
         <main>
           {children}
-          <ToastContainer
+          <Toaster />
+          {/* <ToastContainer
             position="bottom-right"
             autoClose={3000}
             hideProgressBar={true}
@@ -30,7 +32,7 @@ export default async function RootLayout({
             theme="dark"
             transition={Bounce}
             toastClassName={"border text-sm font-extrabold "}
-          />
+          /> */}
         </main>
       </body>
     </html>

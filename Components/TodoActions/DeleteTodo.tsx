@@ -4,7 +4,7 @@ import { X } from "lucide-react";
 import { RowDataPacket } from "mysql2";
 import React, { useState, Dispatch, SetStateAction, useEffect } from "react";
 import { createPortal } from "react-dom";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 
 interface Todo extends RowDataPacket {
   id: number;
@@ -45,11 +45,19 @@ export const DeleteTodo: React.FC<Props> = ({
       .then(() => {
         setTodos((prev) => prev.filter((t) => t.id !== deletedTodos.id));
         onClose();
-        toast.success(
-          <div className="text-white flex w-[250px] h-[50px] items-center">
-            Todo deleted successfully!
-          </div>,
-        );
+        toast.success("Todo deleted successfully", {
+          position: "bottom-right",
+          style: {
+            width: "280px",
+            height: "50px",
+            fontSize: "15px",
+            display: "flex",
+            justifyContent: "center",
+            alignItems: "center",
+            color: "red",
+            border: "2px solid white",
+          },
+        });
       });
   };
 

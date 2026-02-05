@@ -3,7 +3,7 @@
 import { Circle, Pencil, Search, SearchX, Trash } from "lucide-react";
 import { RowDataPacket } from "mysql2";
 import { use, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast } from "sonner";
 import { toLocaleCapitalize } from "@/SERVER/capitalize";
 import { Input } from "@/Components/ui/input";
 import {
@@ -32,11 +32,6 @@ interface Todo extends RowDataPacket {
 
 const Todos = () => {
   const searchParams = useSearchParams();
-  const status = searchParams.get("status");
-
-  // const [selectedFilterStatus, setSelectedFilterStatus] = useState<string>(
-  //   status ?? "ALL",
-  // );
 
   const handlePageRouter = usePageRouter();
 
@@ -55,7 +50,6 @@ const Todos = () => {
   const [showAddTodos, setShowAddTodos] = useState(false);
   const [selectedTodo, setSelectedTodo] = useState<Todo | null>(null);
   const [deletedTodos, setDeletedTodos] = useState<Todo | null>(null);
-
   const [selectedFilterCreatedAt, setSelectedFilterCreatedAt] = useState<
     DateRange | undefined
   >();
@@ -119,7 +113,7 @@ const Todos = () => {
       <div className=" h-24 flex flex-row items-center gap-2">
         <div className="gap-2 flex flex-1 pl-10">
           <Input
-            className="w-[500px] "
+            className="w-125 "
             placeholder="Add your todo here"
             value={todoValue}
             onChange={(e) => setTodoValue(e.target.value)}
@@ -128,11 +122,19 @@ const Todos = () => {
             title="Add Todo"
             onClick={() => {
               if (!todoValue) {
-                toast.error(
-                  <div className="text-white flex w-[250px] h-[50px] items-center">
-                    Todo should not be blank
-                  </div>,
-                );
+                toast.error("Enter your Todo", {
+                  position: "bottom-right",
+                  style: {
+                    width: "280px",
+                    height: "50px",
+                    fontSize: "15px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    color: "red",
+                    border: "2px solid white",
+                  },
+                });
                 return;
               }
               setShowAddTodos(true);
@@ -145,7 +147,7 @@ const Todos = () => {
 
         <div className=" flex-1 flex-row flex gap-2 justify-end pr-10">
           <Input
-            className="w-[300px] "
+            className="w-75 "
             placeholder="Search your todo here"
             value={selectedFilterTodos}
             onChange={(e) => setSelectedFilterTodos(e.target.value)}
@@ -178,7 +180,7 @@ const Todos = () => {
           {filteredTodos.map((t, index) => (
             <TableRow key={t.id}>
               <TableCell className="text-center">{index + 1}</TableCell>
-              <TableCell className="min-w-[300px] max-w-[300px] text-center">
+              <TableCell className="min-w-75] max-w-75 text-center">
                 {toLocaleCapitalize(t.todolist)}
               </TableCell>
               <TableCell className="text-center">
@@ -187,7 +189,7 @@ const Todos = () => {
                     className={`h-4 w-4 ${
                       t.status === "completed"
                         ? "fill-green-500"
-                        : "fill-amber-500"
+                        : "fill-amber-500 animate-pulse"
                     }`}
                   />
                   {toLocaleCapitalize(t.status)}
