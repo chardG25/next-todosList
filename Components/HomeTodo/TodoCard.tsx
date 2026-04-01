@@ -34,27 +34,33 @@ export const TodoCard = () => {
   useEffect(() => {
     fetchTodo();
   }, []);
-
+  console.log(todo);
   return (
-    <div className="h-40 w-full flex items-center justify-center">
-      <Carousel className="relative w-[80%] h-[90%]  flex items-center justify-center border rounded-2xl">
-        <CarouselContent>
-          {todo.slice(0, 10).map((item) => (
-            <CarouselItem key={item.id} className="basis-[20%] h-full">
+    <Carousel className="w-[85%]">
+      <CarouselContent>
+        {todo
+          .filter((item) => item.status === "pending")
+          .slice(0, 20)
+          .map((item) => (
+            <CarouselItem key={item.id} className="basis-1/5 shrink-0">
               <Card className="h-full bg-neutral-900/50">
-                <CardContent className="flex h-full items-center justify-center p-4">
-                  <span className="text-md font-semibold text-center">
+                <CardContent className="flex flex-col aspect-[3/2] items-center justify-center bg-red-100 p-2 ">
+                  <span className="text-xs font-semibold text-center line-clamp-4">
                     {item.todolist}
+                  </span>
+                </CardContent>
+                <CardContent className="flex flex-col aspect-[3/2] items-center justify-center bg-red-100 p-2">
+                  <span className="text-xs font-semibold text-center line-clamp-4">
+                    {item.status}
                   </span>
                 </CardContent>
               </Card>
             </CarouselItem>
           ))}
-        </CarouselContent>
+      </CarouselContent>
 
-        <CarouselPrevious className="size-10" />
-        <CarouselNext className="size-10" />
-      </Carousel>
-    </div>
+      <CarouselPrevious className="size-10" />
+      <CarouselNext className="size-10" />
+    </Carousel>
   );
 };

@@ -8,13 +8,13 @@ export const HomeTodo = () => {
         <div className="flex-1 bg-neutral-800 border border-neutral-500 rounded-md">
           <Chart />
         </div>
-        <div className="flex-1 bg-neutral-800 border border-neutral-500 rounded-md"></div>
+        <div className="flex-1 bg-neutral-800 border border-neutral-500 rounded-md overflow-hidden flex items-center justify-center">
+          <TodoCard />
+        </div>
       </div>
 
       <div className="flex-1 p-2 bg-neutral-900 flex">
-        <div className="border border-neutral-500 flex-1 rounded-md bg-neutral-800">
-          <TodoCard />
-        </div>
+        <div className="border border-neutral-500 flex-1 rounded-md bg-neutral-800"></div>
       </div>
     </div>
   );
