@@ -2,7 +2,7 @@
 
 import { Circle, Pencil, Search, SearchX, Trash } from "lucide-react";
 import { RowDataPacket } from "mysql2";
-import { use, useEffect, useState } from "react";
+import {  useEffect, useMemo, useState } from "react";
 import { toast } from "sonner";
 import { toLocaleCapitalize } from "@/SERVER/capitalize";
 import { Input } from "@/Components/ui/input";
@@ -54,7 +54,7 @@ const Todos = () => {
     DateRange | undefined
   >();
   const [selectedFilterTodos, setSelectedFilterTodos] = useState<string>("");
-  const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
+  // const [filteredTodos, setFilteredTodos] = useState<Todo[]>([]);
 
   const fetchTodos = () => {
     fetch("http://localhost:3000/api/todo")
@@ -68,46 +68,43 @@ const Todos = () => {
     fetchTodos();
   }, []);
 
-  useEffect(() => {
-    const value = selectedFilterTodos.toLowerCase();
+ const filteredTodos = useMemo(() => {
+  const value = selectedFilterTodos.toLowerCase();
 
-    const filteredTodo = todos.filter((todo) => {
-      const matchesTodo = todo.todolist.toLowerCase().includes(value);
+  return todos.filter((todo) => {
+    const matchesTodo = todo.todolist.toLowerCase().includes(value);
 
-      const matchesStatus =
-        !selectedFilterStatus || selectedFilterStatus === "ALL"
-          ? true
-          : todo.status.toLowerCase() === selectedFilterStatus.toLowerCase();
+    const matchesStatus =
+      !selectedFilterStatus || selectedFilterStatus === "ALL"
+        ? true
+        : todo.status.toLowerCase() === selectedFilterStatus.toLowerCase();
 
-      const matchesDate = (() => {
-        if (!selectedFilterCreatedAt?.from) return true;
+    const matchesDate = (() => {
+      if (!selectedFilterCreatedAt?.from) return true;
 
-        const todoDate = new Date(todo.created_at);
+      const todoDate = new Date(todo.created_at.replace(" ", "T"));
 
-        const from = new Date(selectedFilterCreatedAt.from);
-        from.setHours(0, 0, 0, 0);
+      const from = new Date(selectedFilterCreatedAt.from);
+      from.setHours(0, 0, 0, 0);
 
-        if (!selectedFilterCreatedAt.to) {
-          return todoDate >= from;
-        }
+      if (!selectedFilterCreatedAt.to) {
+        return todoDate >= from;
+      }
 
-        const to = new Date(selectedFilterCreatedAt.to);
-        to.setHours(23, 59, 59, 999);
+      const to = new Date(selectedFilterCreatedAt.to);
+      to.setHours(23, 59, 59, 999);
 
-        return todoDate >= from && todoDate <= to;
-      })();
+      return todoDate >= from && todoDate <= to;
+    })();
 
-      return matchesTodo && matchesStatus && matchesDate;
-    });
-
-    setFilteredTodos(filteredTodo);
-  }, [
-    selectedFilterTodos,
-    selectedFilterStatus,
-    selectedFilterCreatedAt,
-    todos,
-  ]);
-
+    return matchesTodo && matchesStatus && matchesDate;
+  });
+}, [
+  selectedFilterTodos,
+  selectedFilterStatus,
+  selectedFilterCreatedAt,
+  todos,
+]);
   return (
     <div className="h-full w-full bg-neutral-900/80 text-white flex flex-col ">
       <div className=" h-24 flex flex-row items-center gap-2">
@@ -221,7 +218,7 @@ const Todos = () => {
                         timeZone: "Asia/Manila",
                       })
                       .replace(",", "")
-                  : ""}
+                  : "-"}
               </TableCell>
 
               <TableCell className="text-center">
